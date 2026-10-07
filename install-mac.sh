@@ -11,7 +11,8 @@ case "$(uname -m)" in
 esac
 
 echo "Ищем последнюю версию Luma для Mac ($pat)…"
-json="$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest")"
+# The newest release that has a Mac build (a Windows-only release must not break the Mac command).
+json="$(curl -fsSL "https://api.github.com/repos/$REPO/releases?per_page=15")"
 url="$(printf '%s' "$json" | grep -o '"browser_download_url": *"[^"]*macOS-'"$pat"'[^"]*\.zip"' | head -1 | sed 's/.*"\(https[^"]*\)"/\1/')"
 if [ -z "$url" ]; then
   echo "Версия для Mac пока не опубликована. Попробуйте позже."
